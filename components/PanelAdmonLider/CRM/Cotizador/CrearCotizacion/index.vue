@@ -32,38 +32,68 @@
                             </div>
                         </v-col>
                     </v-row>
-                </div>
+                </div> 
             </v-col>
         </v-row>
-        <v-form>
-      <v-row>
-        <v-col cols="12" md="6">
-          <v-text-field label="Descripción" v-model="product.description" required></v-text-field>
-          <v-textarea label="Detalles" v-model="product.details"></v-textarea>
-        </v-col>
-        <v-col cols="12" md="6">
-          <v-text-field label="Cantidad" v-model.number="product.quantity" required></v-text-field>
-          <v-text-field label="Valor unitario" v-model.number="product.unitPrice" required></v-text-field>
-        </v-col>
-      </v-row>
-      <v-btn color="primary" @click="addProduct" class="mt-5">Agregar producto</v-btn>
-    </v-form>
-    <v-divider class="mt-5"></v-divider>
-    <v-data-table :headers="headers" :items="products" hide-default-footer>
-      <template v-slot:items="props">
-        <tr>
-          <td>{{ props.item.description }}</td>
-          <td>{{ props.item.quantity }}</td>
-          <td>{{ props.item.unitPrice }}</td>
-          <td>{{ props.item.subtotal }}</td>
-          <td>{{ props.item.tax }}</td>
-          <td>{{ props.item.total }}</td>
-        </tr>
-      </template>
-      <template v-slot:no-data>
-        <v-alert :value="true" color="error" icon="mdi-alert-circle">No hay productos agregados</v-alert>
-      </template>
-    </v-data-table>
+        <div>
+
+          <v-data-table :headers="headers" :items="cola" hide-default-footer></v-data-table>
+          <v-data-table  :headers="headers" :items="items" :editable="true" hide-default-footer>
+            <template v-slot:[`item.nombre`]="{ item }">
+              <v-select
+                v-model="item.nombre"
+                min="0"
+                :items="productos.map(producto => producto.nombre)"
+                @change="calcularTotal(item)"
+              ></v-select>
+            </template>
+            <template v-slot:[`item.descripcion`]="{ item }">
+              <v-text-field
+                v-model="item.descripcion"
+                min="0"
+                @change="calcularTotal(item)"
+              ></v-text-field>
+            </template>
+            <template v-slot:[`item.precioUnitario`]="{ item }">
+            <v-text-field
+              v-model="item.precioUnitario"
+              min="0"
+              @change="calcularTotal(item)"
+            ></v-text-field>
+          </template>
+          <template v-slot:[`item.descuento`]="{ item }">
+            <v-text-field
+              v-model="item.descuento"
+              min="0"
+              @change="calcularTotal(item)"
+            ></v-text-field>
+          </template>
+          <template v-slot:[`item.cantidad`]="{ item }">
+            <v-text-field
+              v-model="item.cantidad"
+              min="0"
+              @change="calcularTotal(item)"
+            ></v-text-field>
+          </template>
+            <template v-slot:[`item.total`]="{ item }">
+              <v-text-field v-model="item.total" disabled></v-text-field>
+            </template>
+          </v-data-table>
+          <v-row align="end">
+            <v-col align="end"> 
+              <p>valor sin iva: {{ valorSinIVA }}</p>  
+              <p>Valor iva: {{ iva }}</p> 
+              <p>Valor Total: {{ valorTotal }}</p>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-btn @click="agregarCola(item)">Agregar a la cola</v-btn>
+            </v-col>
+          </v-row>
+          
+         
+      </div>
     </v-container>
   </template>
 <style>
@@ -75,48 +105,74 @@
 export default {
   data() {
     return {
-      product: {
-        description: '',
-        details: '',
-        quantity: '',
-        unitPrice: ''
-      },
-      products: []
-    }
+      headers: [
+        { text: "Referencia", value: "referencia", editable: true },
+        { text: "Nombre", value: "nombre", editable: true },
+        { text: "Descripción", value: "descripcion", editable: true },
+        { text: "Precio unitario", value: "precioUnitario", editable: true },
+        { text: "Descuento", value: "descuento", editable: true },
+        { text: "Cantidad", value: "cantidad" },
+        { text: "Total", value: "total" },
+      ],
+      productos: [
+        {
+          referencia: "001",
+          nombre: "Producto 1",
+          descripcion: "Descripción del producto 1",
+          precioUnitario: 10,
+        },
+        {
+          referencia: "002",
+          nombre: "Producto 2",
+          descripcion: "Descripción del producto 2",
+          precioUnitario: 20,
+        },
+        {
+          referencia: "003",
+          nombre: "Producto 3",
+          descripcion: "Descripción del producto 3",
+          precioUnitario: 30,
+        },
+      ],
+      items: [],
+      cola: [],
+    };
+  },
+  created(){
+   this.agregarProducto()
   },
   computed: {
-    headers() {
-      return [
-        { text: 'Descripción', value: 'description' },
-        { text: 'Cantidad', value: 'quantity' },
-        { text: 'Valor unitario', value: 'unitPrice' },
-        { text: 'Subtotal', value: 'subtotal' },
-        { text: 'IVA', value: 'tax' },
-        { text: 'Total', value: 'total' }
-      ]
-    }
+    valorSinIVA() {
+      return this.items.reduce((sum, item) => sum + item.precioUnitario * item.cantidad, 0);
+    },
+    iva() {
+      return this.items.reduce((sum, item) => sum + item.precioUnitario * item.cantidad * 0.16, 0);
+    },
+    valorTotal() {
+      return this.valorSinIVA + this.iva;
+    },
   },
   methods: {
-    addProduct() {
-      const subtotal = this.product.quantity * this.product.unitPrice
-      const tax = subtotal * 0.16
-      const total = subtotal + tax
-      const newProduct = {
-        description: this.product.description,
-        details: this.product.details,
-        quantity: this.product.quantity,
-        unitPrice: this.product.unitPrice,
-        subtotal: subtotal,
-        tax: tax,
-        total: total
-      }
-      this.products.push(newProduct)
-      this.product.description = ''
-      this.product.details = ''
-      this.product.quantity = ''
-      this.product.unitPrice = ''
-    }
-  }
-}
+    agregarProducto() {
+      const nuevoProducto = {
+        referencia: null,
+        nombre: null,
+        descripcion: null,
+        precioUnitario: null,
+        cantidad: null,
+        total: null,
+        agregar: null,
+      };
+      this.items.push(nuevoProducto);
+    },
+    calcularTotal(item) {
+      item.total = item.precioUnitario * item.cantidad;
+    },
+    agregarCola(item) {
+      this.agregarProducto()
+      const nuevoItem = Object.assign({}, item);
+      this.cola.unshift(nuevoItem);
+    },
+},
+};
 </script>
-  

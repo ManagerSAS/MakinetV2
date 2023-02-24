@@ -41,6 +41,7 @@
         // Si las credenciales son válidas, puedes redirigir al usuario a la página principal
         // de lo contrario, puedes mostrar un mensaje de error.
             this.loading = true;
+            this.$router.push('/PanelAdmonLider')
             const loginCardElements = document.getElementsByClassName('login-card');
             for (let i = 0; i < loginCardElements.length; i++) {
               loginCardElements[i].style.display = 'none';
@@ -53,7 +54,7 @@
 
             setTimeout(() => {
                 this.loading = false;
-                this.$router.push('/PanelAdmonLider')
+                
             }, 3000);
       }
     }
