@@ -8,7 +8,7 @@
 <script>
     import Header from '~/components/PanelAdmonLider/Header'
     import Navigation from '~/components/PanelAdmonLider/Navigation'
-    import CrearCotizacion from '~/components/PanelAdmonLider/CRM/Cotizador/CrearCotizacion'
+    import CrearCotizacion from '~/components/PanelAdmonLider/CRM/Cotizador'
     export default {
         components:{
             Header,

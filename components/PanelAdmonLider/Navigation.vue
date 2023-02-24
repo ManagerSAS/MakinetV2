@@ -9,48 +9,86 @@
         <p class="name">Alejandro Sastoque</p>
         <p class="cargo">Desarrollador Web</p>
       </div>
-      <v-list dense>
-      <v-list-item-group>
-        <transition-group name="submenu-transition" tag="div">
-
-          <v-list-item v-for="(item, index) in items" :key="index">
-            <v-list-item-action>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ item.title }}
-              </v-list-item-title>
-              <v-list-item-subtitle v-if="item.submenu">
-                <v-list-item-group>
-                  <v-list-item v-for="(subitem, subindex) in item.submenu" :key="subindex" :to="subitem.to" exact>
-                    <v-list-item-action>
-                      <v-icon>{{ subitem.icon }}</v-icon>
-                    </v-list-item-action>
-                    <v-list-item-content>
-                      <v-list-item-title>{{ subitem.title }}</v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list-item-group>
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </transition-group>
-      </v-list-item-group>
-    </v-list>
+        <v-list dense offset-y class="animate__animated animate__fadeIn">
+          <v-list-item-group>
+            <v-list-item
+              v-for="item in items"
+              :key="item.title"
+              v-bind="item"
+              @click="navigateTo(item.to)"
+              class="animate__animated animate__bounceIn"
+            >
+              <v-list-item-icon>
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
   </v-navigation-drawer>
-
   </template>
-  <style>
-  .submenu-transition-enter-active, .submenu-transition-leave-active {
-  transition: all 0.3s ease-in-out;
-}
-
-.submenu-transition-enter, .submenu-transition-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-
+  <style lang="scss">
+  .animate__animated {
+    animation-duration: 1s;
+  }
+  
+  .animate__bounceIn {
+    animation-name: bounceIn;
+  }
+  
+  .animate__fadeIn {
+    animation-name: fadeIn;
+  }
+  
+  @keyframes bounceIn {
+    from,
+    20%,
+    40%,
+    60%,
+    80%,
+    to {
+      animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    }
+    
+    0% {
+      opacity: 0;
+      transform: scale3d(0.3, 0.3, 0.3);
+    }
+    
+    20% {
+      transform: scale3d(1.1, 1.1, 1.1);
+    }
+    
+    40% {
+      transform: scale3d(0.9, 0.9, 0.9);
+    }
+  
+    60% {
+      opacity: 1;
+      transform: scale3d(1.03, 1.03, 1.03);
+    }
+    
+    80% {
+      transform: scale3d(0.97, 0.97, 0.97);
+    }
+    
+    to {
+      opacity: 1;
+      transform: scale3d(1, 1, 1);
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    
+    to {
+      opacity: 1;
+    }
+  }
   .rounded-foto{
     width: 100px; /* establece el ancho de la imagen */
     height: 100px; /* establece la altura de la imagen */
@@ -89,62 +127,12 @@
       return {
         items: [
           {
+            title: 'Inicio',
+            to: '/PanelAdmonLider',
+          },
+          {
             title: 'CRM',
-            submenu:[
-              {
-                icon: 'mdi-apps',
-                title: 'Cotizador',
-                isActive: false,
-                submenu:[
-                  {
-                    icon: 'mdi-apps',
-                    title:'Ver Cotizaciones',
-                    to: '/'
-                  },
-                  {
-                    icon: 'mdi-apps',
-                    title:'Crear Cotizaciones',
-                    to: '/'
-                  },
-                ]
-              },
-              {
-                icon: 'mdi-apps',
-                title: 'Clientes',
-                isActive: false,
-                submenu:[
-                  {
-                    icon: 'mdi-apps',
-                    title:'Ver Cliente',
-                    to: '/'
-                  },
-                  {
-                    icon: 'mdi-apps',
-                    title:'Crear Cliente',
-                    to: '/'
-                  },
-                ]
-              },
-              {
-                icon: 'mdi-apps',
-                title: 'Productos',
-                isActive: false,
-                submenu:[
-                  {
-                    icon: 'mdi-apps',
-                    title:'Ver Productos',
-                    to: '/'
-                  },
-                  {
-                    icon: 'mdi-apps',
-                    title:'Crear Productos',
-                    to: '/'
-                  },
-                ]
-              },
-              
-            ],
-            to: '/'
+            to: '/PanelAdmonLider/CRM/Cotizador',
           },
         ],
       }

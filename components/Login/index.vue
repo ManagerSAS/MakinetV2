@@ -40,11 +40,20 @@
         // Aquí puedes agregar la lógica de validación de usuario y contraseña
         // Si las credenciales son válidas, puedes redirigir al usuario a la página principal
         // de lo contrario, puedes mostrar un mensaje de error.
-        this.loading = true;
-            document.querySelector('.login-card').style.display = 'none';
-            document.querySelector('.login-loader').style.display = 'flex';
+            this.loading = true;
+            const loginCardElements = document.getElementsByClassName('login-card');
+            for (let i = 0; i < loginCardElements.length; i++) {
+              loginCardElements[i].style.display = 'none';
+            }
+
+            const loginLoaderElements = document.getElementsByClassName('login-loader');
+            for (let i = 0; i < loginLoaderElements.length; i++) {
+              loginLoaderElements[i].style.display = 'flex';
+            }
+
             setTimeout(() => {
                 this.loading = false;
+                this.$router.push('/PanelAdmonLider')
             }, 3000);
       }
     }
