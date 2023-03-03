@@ -9,131 +9,101 @@
         <p class="name">Alejandro Sastoque</p>
         <p class="cargo">Desarrollador Web</p>
       </div>
-        <v-list dense offset-y class="animate__animated animate__fadeIn">
-          <v-list-item-group>
-            <v-list-item
-              v-for="item in items"
-              :key="item.title"
-              v-bind="item"
-              @click="navigateTo(item.to)"
-              class="animate__animated animate__bounceIn"
-            >
-              <v-list-item-icon>
-                <v-icon>{{ item.icon }}</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
+      <!-- <div>
+    <v-list>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Categoria 1</v-list-item-title>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-btn icon @click="showItems = !showItems">
+            <v-icon>{{ showItems ? 'mdi-chevron-up' : 'mdi-plus' }}</v-icon>
+          </v-btn>
+        </v-list-item-action>
+      </v-list-item>
+      <v-expand-transition>
+        <v-list v-if="showItems">
+          <v-list-item v-for="item in items" :key="item">
+            <v-list-item-content>
+              <v-list-item-title>{{ item }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
+      </v-expand-transition>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Categoria 2</v-list-item-title>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-btn icon @click="showItems2 = !showItems2">
+            <v-icon>{{ showItems2 ? 'mdi-chevron-up' : 'mdi-plus' }}</v-icon>
+          </v-btn>
+        </v-list-item-action>
+      </v-list-item>
+      <v-expand-transition>
+        <v-list v-if="showItems2">
+          <v-list-item v-for="item in items2" :key="item">
+            <v-list-item-content>
+              <v-list-item-title>{{ item }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-expand-transition>
+    </v-list>
+  </div> -->
+  <v-list>
+    <v-list-group v-for="(categoria, index) in items" :key="index">
+      <template v-slot:activator>
+        <v-list-item-title >{{ categoria.categoria }}</v-list-item-title>
+      </template>
+      <v-list-group
+        v-for="(subcategoria, index) in categoria.item"
+        :key="index"
+        sub-group
+      >
+        <template v-slot:activator>
+          <v-list-item-title >{{ subcategoria.subcategoria }}</v-list-item-title>
+        </template>
+        <v-list-item
+          v-for="(subsubcategoria, index) in subcategoria.item"
+          :key="index"
+          link
+          :to="subsubcategoria.to"
+        >
+          <v-list-item-title >
+              {{ subsubcategoria.subsubcategoria }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list-group>
+    </v-list-group>
+  </v-list>
   </v-navigation-drawer>
   </template>
-  <style lang="scss">
-  .animate__animated {
-    animation-duration: 1s;
-  }
-  
-  .animate__bounceIn {
-    animation-name: bounceIn;
-  }
-  
-  .animate__fadeIn {
-    animation-name: fadeIn;
-  }
-  
-  @keyframes bounceIn {
-    from,
-    20%,
-    40%,
-    60%,
-    80%,
-    to {
-      animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
-    }
-    
-    0% {
-      opacity: 0;
-      transform: scale3d(0.3, 0.3, 0.3);
-    }
-    
-    20% {
-      transform: scale3d(1.1, 1.1, 1.1);
-    }
-    
-    40% {
-      transform: scale3d(0.9, 0.9, 0.9);
-    }
-  
-    60% {
-      opacity: 1;
-      transform: scale3d(1.03, 1.03, 1.03);
-    }
-    
-    80% {
-      transform: scale3d(0.97, 0.97, 0.97);
-    }
-    
-    to {
-      opacity: 1;
-      transform: scale3d(1, 1, 1);
-    }
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    
-    to {
-      opacity: 1;
-    }
-  }
-  .rounded-foto{
-    width: 100px; /* establece el ancho de la imagen */
-    height: 100px; /* establece la altura de la imagen */
-    object-fit: cover; /* hace que la imagen se ajuste al contenedor */
-    object-position: center; /* centra la imagen */
-    border-radius: 50%; /* hace que la imagen sea redonda */
-    aspect-ratio: 1/1; /* establece la relación de aspecto a 1:1 (cuadrada) */
-  }
-  .name{
-    font-size: 20px;
-    font-family: 'poppins';
-  }
-  .cargo{
-    position: relative;
-    top: -25px;
-    font-size: 15px;
-    font-family: 'poppins';
-  }
-  .user-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 16px;
-  }
-
-  .user-info p {
-    margin-top: 16px;
-  }
-
-  </style>
   <script>
   export default {
-    data () {
+    data() {
       return {
+        showItems: false,
+        showItems2: false,
         items: [
           {
-            title: 'Inicio',
-            to: '/PanelAdmonLider',
-          },
-          {
-            title: 'CRM',
-            to: '/PanelAdmonLider/CRM/Cotizador',
-          },
+            categoria: 'CRM',
+            item:[
+              {
+                subcategoria: 'Cotizador',
+                item: [
+                  {subsubcategoria: 'Crear Cotizacion',to:'/PanelAdmonLider/CRM/Cotizador/CrearCotizacion'},
+                  {subsubcategoria: 'Ver Cotizaciones'},
+                ] 
+              },
+              {
+                subcategoria: 'Clientes',
+                item: [
+                  {subsubcategoria: 'Crear Cliente'}
+                ] 
+              }
+            ]
+          }, 
         ],
       }
     }
