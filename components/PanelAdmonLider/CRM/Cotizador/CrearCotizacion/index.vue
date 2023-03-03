@@ -17,7 +17,7 @@
                 <div style="background-color: #EDEDED;" class="roundedCard elevation-5">
                     <v-row >
                         <v-col>
-                            <div style="font-size: 20px; font-weight: 500; font-family: 'Poppins', sans-serif; " justify="center" align="center">
+                            <div style="font-size: 20px; font-weight: 500; font-family: 'Poppins', sans-serif;" justify="center" align="center">
                                 COTIZACIÓN N°0191
                             </div>
                             <div style="line-height: 1.5rem; font-weight: 500; font-family: 'Poppins', sans-serif;" class="mx-6 mt-3"  justify="center" align="star">
@@ -58,110 +58,109 @@
           <v-divider></v-divider>
           <v-data-table dense class="table-class" align="center" justify="center" :headers="headers" :items="items" hide-default-footer >
             <template v-slot:[`item.ref`]="{ item }" >
-            <v-text-field
-              :style="{ width: '30px' }"
-              v-model="item.ref"
-              disabled
-              dense
-              @input="calcularTotal(item)"
-            ></v-text-field>
-          </template>
-          <template v-slot:[`item.nombre`]="{ item }">
-            <v-select
-              v-model="item.nombre"
-              :style="{ width: '150px' }"
-              :menu-props="{ transition: 'scale-transition', bottom: true }"
-              :items="productos.map(producto => producto.nombre)"
-              dense
-              single-line
-              outlined
-              @change="BuscarProducto(item)"
-              @input="calcularTotal(item)"
-            ></v-select>
-          </template>
-          <template v-slot:[`item.descripcion`]="{ item }">
-            <v-textarea
-              v-model="item.descripcion"
-              dense
-              :style="{ width: '280px', paddingTop: '15px', paddingLeft: '-5px' }"
-              single-line
-              outlined
-              rows="2"
-              @input="calcularTotal(item)"
-            ></v-textarea>
-          </template>
-          <template v-slot:[`item.valorUnitario`]="{ item }">
-            <v-text-field
-              v-model="item.valorUnitario"
-              dense
-              single-line
-              outlined
+              <v-text-field
+                :style="{ width: '30px' }"
+                v-model="item.ref"
+                disabled
+                dense
+                @input="calcularTotal(item)"
+              ></v-text-field>
+            </template>
+            <template v-slot:[`item.nombre`]="{ item }">
+              <v-select
+                v-model="item.nombre"
+                :style="{ width: '150px' }"
+                :menu-props="{ transition: 'scale-transition', bottom: true }"
+                :items="productos.map(producto => producto.nombre)"
+                dense
+                single-line
+                outlined
+                @change="BuscarProducto(item)"
+                @input="calcularTotal(item)"
+              ></v-select>
+            </template>
+            <template v-slot:[`item.descripcion`]="{ item }">
+              <v-textarea
+                v-model="item.descripcion"
+                dense
+                :style="{ width: '280px', paddingTop: '15px', paddingLeft: '-5px' }"
+                single-line
+                outlined
+                rows="3"
+                @input="calcularTotal(item)"
+              ></v-textarea>
+            </template>
+            <template v-slot:[`item.valorUnitario`]="{ item }">
+              <v-text-field
+                v-model="item.valorUnitario"
+                dense
+                single-line
+                outlined
+                v-bind:prefix="'$'"
+                :style="{ width: '90px' }"
+                @input="calcularTotal(item)"
+                type="number"
+                min="0"
+              ></v-text-field>
+            </template>
+            <template v-slot:[`item.descuento`]="{ item }">
+              <v-select
+                v-model="item.descuento"
+                dense
+                :items="TypeDesc"
+                single-line
+                outlined
+                v-bind:suffix="'%'"
+                :style="{ width: '90px' }"
+                @input="calcularTotal(item)"
+                type="number"
+                min="0"
+              ></v-select>
+            </template>
+            <template v-slot:[`item.valorIVA`]="{ item }">
+              <v-select
+                v-model="item.valorIVA"
+                dense
+                :menu-props="{ transition: 'scale-transition', bottom: true }"
+                :items="TypeIva"
+                single-line
+                v-bind:suffix="'%'"
+                outlined
+                :style="{ width: '90px' }"
+                @input="calcularTotal(item)"
+                type="number"
+                min="0"
+              ></v-select>
+            </template>
+            <template v-slot:[`item.cantidad`]="{ item }">
+              <v-text-field
+                v-model="item.cantidad"
+                dense
+                single-line
+                outlined
+                :style="{ width: '80px' }"
+                @input="calcularTotal(item)"
+                type="number"
+                min="0"
+              ></v-text-field>
+            </template>
+            <template v-slot:[`item.valorTotal`]="{ item }">
+              <v-text-field 
               v-bind:prefix="'$'"
-              :style="{ width: '90px' }"
-              @input="calcularTotal(item)"
-              type="number"
-              min="0"
-            ></v-text-field>
-          </template>
-          <template v-slot:[`item.descuento`]="{ item }">
-            <v-select
-              v-model="item.descuento"
-              dense
-              :items="TypeDesc"
-              single-line
-              outlined
-              v-bind:suffix="'%'"
-              :style="{ width: '90px' }"
-              @input="calcularTotal(item)"
-              type="number"
-              min="0"
-            ></v-select>
-          </template>
-          <template v-slot:[`item.valorIVA`]="{ item }">
-            <v-select
-              v-model="item.valorIVA"
-              dense
-              :menu-props="{ transition: 'scale-transition', bottom: true }"
-              :items="TypeIva"
-              single-line
-              v-bind:suffix="'%'"
-              outlined
-              :style="{ width: '90px' }"
-              @input="calcularTotal(item)"
-              type="number"
-              min="0"
-            ></v-select>
-          </template>
-          <template v-slot:[`item.cantidad`]="{ item }">
-            <v-text-field
-              v-model="item.cantidad"
-              v-bind:prefix="'$'"
-              dense
-              single-line
-              outlined
-              :style="{ width: '80px' }"
-              @input="calcularTotal(item)"
-              type="number"
-              min="0"
-            ></v-text-field>
-          </template>
-          <template v-slot:[`item.valorTotal`]="{ item }">
-            <v-text-field 
-            v-bind:prefix="'$'"
-              v-model="item.valorTotal" 
-              disabled
-             >
-            </v-text-field>
-          </template>
-          <template v-slot:[`item.actions`]="{ item }">
-            <v-icon
-              small
-              @click="deleteItem(item)"
-            >
-              mdi-delete
-            </v-icon>
-          </template>
-        </v-data-table>
+                v-model="item.valorTotal" 
+                disabled
+              >
+              </v-text-field>
+            </template>
+            <template v-slot:[`item.actions`]="{ item }">
+              <v-icon
+                small
+                @click="deleteItem(item)"
+              >
+                mdi-delete
+              </v-icon>
+            </template>
+          </v-data-table>
         <v-divider></v-divider>
         <div class="text-center pt-2"> 
           <v-btn @click="agregarItem">Agregar</v-btn>
@@ -336,15 +335,14 @@ export default {
     async generarPDF() {
        const comentarios = this.observacionesSeleccionadas
        const items = this.items
-          const data = JSON.stringify([  
+          const datas = [  
               {comentarios: comentarios},
               {items: items}
-          ])
-          console.log(data)
+          ]
           axios({
             url: 'https://api.makinet.app/api/v1/forms/GenerarPdf',
             method: 'POST',
-            data,
+            data: {data:datas},
             responseType: 'blob'
           }).then(response => {
           console.log(response)
