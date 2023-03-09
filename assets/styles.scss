@@ -46,4 +46,31 @@
   font-size: 15px;
   font-weight: 600;
 }
+.Bg-inf-clientes{
+  background-color: #EDEDED; 
+  width: 350px;
+  line-height: 1rem;
+  padding-bottom: 20px;
+  font-size: 13px;
+  font-weight: 500; 
+  font-family: 'Poppins', sans-serif;
+}
+.v-data-table .v-data-table__wrapper table td  {
+  font-size: 12px;
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.v-data-table .v-data-table__wrapper table thead   {
+  font-size: 12px;
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
 
