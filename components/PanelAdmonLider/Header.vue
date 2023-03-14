@@ -1,8 +1,7 @@
 <template>
     <v-app-bar
-      clipped-left
-      fixed
       app
+      class="rounded-xl elevation-5 ma-2"
     >
       <v-toolbar-title>MAKINET</v-toolbar-title>
       <v-spacer />

@@ -13,8 +13,18 @@
           </div>
         </div>
         <div class="login-form">
-          <v-text-field label="Nombre de usuario" outlined></v-text-field>
-          <v-text-field label="Contraseña" outlined :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" @click:append="showPassword = !showPassword" :type="showPassword ? 'text' : 'password'"></v-text-field>
+          <v-text-field 
+            v-model="email" 
+            label="Nombre de usuario" outlined
+          >
+          </v-text-field>
+          <v-text-field 
+            label="Contraseña"
+            v-model="password" 
+            outlined :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" 
+            @click:append="showPassword = !showPassword" :type="showPassword ? 'text' : 'password'"
+          >
+          </v-text-field>
           <v-btn color="primary" class="mt-5" @click="login">Iniciar sesión</v-btn>
           <div class="login-loader hide" v-if="loading">
             <v-progress-circular indeterminate color="primary"></v-progress-circular>
@@ -28,30 +38,68 @@
   </template>
   
   <script>
+  import post from '../post/post'
+import store from '@/store/store.js'
+
   export default {
     data() {
       return {
         showPassword: false,
-        loading: false
+        loading: false,
+        email: '',
+        password: '',
+        rules: {
+            required: value => !!value || 'Requerido.',
+            email: value => {
+                const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                return pattern.test(value) || 'Correo invalido.'
+            },
+        },
       }
     },
     methods: {
-      login() {
-        // Aquí puedes agregar la lógica de validación de usuario y contraseña
-        // Si las credenciales son válidas, puedes redirigir al usuario a la página principal
-        // de lo contrario, puedes mostrar un mensaje de error.
-            this.loading = true;
-            this.$router.push('/PanelAdmonLider')
-            const loginCardElements = document.getElementsByClassName('login-card');
-            for (let i = 0; i < loginCardElements.length; i++) {
-              loginCardElements[i].style.display = 'none';
-            }
+      async login() {
+        this.loading = true;
+        const dataUSer = { 
+          usuario: this.email, 
+          clave: this.password 
+        }; 
+            // this.$router.push('/PanelAdmonLider')
+            try {
+                const data = await post.login(dataUSer);
+                console.log(data)
+                const status = data.status
+                const token = data.data.token
 
-            const loginLoaderElements = document.getElementsByClassName('login-loader');
-            for (let i = 0; i < loginLoaderElements.length; i++) {
-              loginLoaderElements[i].style.display = 'flex';
-            }
+                if (status === 200 && data.data.token !== null) {
+                    if (data.data.token) {
+                      if(data.data.rows[0].tipo_usuario === 1)
+                        setTimeout(() => {
+                            this.loadLogin = false;
+                        }, 3000);
 
+                        localStorage.setItem('token', token);
+                        localStorage.setItem('username', data.data.rows[0].usuario)
+                        localStorage.setItem('authenticated-makinet', true);
+                        store.commit('doLogin', token);
+                        store.dispatch('doLogin', token);
+                        this.$router.push('/PanelAdmonLider')
+                    }
+                }
+                //  else {
+                //     this.snackbarColor = 'red accent-3';
+                //     this.showError = true;
+                //     this.messageInvalid = 'Asegúrate que el usuario y la contraseña sean correctos';
+                //     setTimeout(() => {
+                //         this.snackbarColor = '';
+                //         this.showError = false;
+                //         this.messageInvalid = '';
+                //     }, 5000);
+                // }
+            } catch (error) {
+                console.log(error);
+            }   
+          
             setTimeout(() => {
                 this.loading = false;
                 
